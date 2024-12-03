@@ -3,16 +3,7 @@ use regex::Regex;
 pub fn part1(contents: &str) -> i32 {
     let re = Regex::new(r"mul\(\d{1,3},\d{1,3}\)").unwrap();
     let mults: Vec<&str> = re.captures_iter(contents).map(|x| x.get(0).unwrap().as_str()).collect();
-    let mut sum = 0;
-    mults.iter().for_each(|x| {
-        let start = x.find("(").unwrap();
-        let comma = x.find(",").unwrap();
-        let end = x.find(")").unwrap();
-        let a = x[start + 1..comma].parse::<i32>().unwrap();
-        let b = x[comma + 1..end].parse::<i32>().unwrap();
-        sum += a * b;
-    });
-    sum
+    mults.iter().map(|x| parse_mult(x)).sum()
 }
 
 pub fn part2(contents: &str) -> i32 {
@@ -26,15 +17,19 @@ pub fn part2(contents: &str) -> i32 {
         } else if x == "don't()" {
             enabled = false;
         } else if enabled {
-            let start = x.find("(").unwrap();
-            let comma = x.find(",").unwrap();
-            let end = x.find(")").unwrap();
-            let a = x[start + 1..comma].parse::<i32>().unwrap();
-            let b = x[comma + 1..end].parse::<i32>().unwrap();
-            sum += a * b;
+            sum += parse_mult(x);
         }
     });
     sum
+}
+
+fn parse_mult(x: &str) -> i32 {
+    let start = x.find("(").unwrap();
+    let comma = x.find(",").unwrap();
+    let end = x.find(")").unwrap();
+    let a = x[start + 1..comma].parse::<i32>().unwrap();
+    let b = x[comma + 1..end].parse::<i32>().unwrap();
+    a * b
 }
 
 
