@@ -1,36 +1,34 @@
 use regex::Regex;
 
 pub fn part1(contents: &str) -> i32 {
-    let re = Regex::new(r"mul\(\d{1,3},\d{1,3}\)").unwrap();
-    let mults: Vec<&str> = re.captures_iter(contents).map(|x| x.get(0).unwrap().as_str()).collect();
-    mults.iter().map(|x| parse_mult(x)).sum()
+    let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap();
+    re.captures_iter(contents).map(|x| {
+        let a = x.get(1).unwrap().as_str().parse::<i32>().unwrap();
+        let b = x.get(2).unwrap().as_str().parse::<i32>().unwrap();
+        a * b
+    }).sum()
 }
 
 pub fn part2(contents: &str) -> i32 {
-    let re = Regex::new(r"don't\(\)|do\(\)|mul\(\d{1,3},\d{1,3}\)").unwrap();
+    let re = Regex::new(r"do(n't)?\(\)|mul\((\d{1,3}),(\d{1,3})\)").unwrap();
     let mut enabled = true;
     let mut sum = 0;
     re.captures_iter(contents).for_each(|x| {
-        let x = x.get(0).unwrap().as_str();
-        match x {
+        let command = x.get(0).unwrap().as_str();
+        match command {
             "do()" => enabled = true,
             "don't()" => enabled = false,
             _ => {
                 if enabled {
-                    sum += parse_mult(x);
+                    let a = x.get(2).unwrap().as_str().parse::<i32>().unwrap();
+                    let b = x.get(3).unwrap().as_str().parse::<i32>().unwrap();
+                    sum += a * b;
                 }
             }
         };
     });
     sum
 }
-
-fn parse_mult(x: &str) -> i32 {
-    let re = Regex::new(r"\d{1,3}").unwrap();
-    let nums: Vec<i32> = re.captures_iter(x).map(|x| x.get(0).unwrap().as_str().parse().unwrap()).collect();
-    nums[0] * nums[1]
-}
-
 
 #[cfg(test)]
 mod tests {
