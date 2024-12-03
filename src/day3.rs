@@ -12,13 +12,15 @@ pub fn part2(contents: &str) -> i32 {
     let mut sum = 0;
     re.captures_iter(contents).for_each(|x| {
         let x = x.get(0).unwrap().as_str();
-        if x == "do()" {
-            enabled = true;
-        } else if x == "don't()" {
-            enabled = false;
-        } else if enabled {
-            sum += parse_mult(x);
-        }
+        match x {
+            "do()" => enabled = true,
+            "don't()" => enabled = false,
+            _ => {
+                if enabled {
+                    sum += parse_mult(x);
+                }
+            }
+        };
     });
     sum
 }
