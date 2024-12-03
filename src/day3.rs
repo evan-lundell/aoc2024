@@ -24,12 +24,9 @@ pub fn part2(contents: &str) -> i32 {
 }
 
 fn parse_mult(x: &str) -> i32 {
-    let start = x.find("(").unwrap();
-    let comma = x.find(",").unwrap();
-    let end = x.find(")").unwrap();
-    let a = x[start + 1..comma].parse::<i32>().unwrap();
-    let b = x[comma + 1..end].parse::<i32>().unwrap();
-    a * b
+    let re = Regex::new(r"\d{1,3}").unwrap();
+    let nums: Vec<i32> = re.captures_iter(x).map(|x| x.get(0).unwrap().as_str().parse().unwrap()).collect();
+    nums[0] * nums[1]
 }
 
 
