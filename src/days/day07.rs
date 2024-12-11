@@ -1,6 +1,31 @@
-pub fn part1(contents: &str) -> u64 {
-    let mut matches: u64 = 0;
-    let input: Vec<(u64, Vec<u64>)> = contents
+use crate::days::Day;
+
+pub struct Day07;
+
+impl Day for Day07 {
+    fn part1(contents: &str) -> u64 {
+        let mut matches: u64 = 0;
+        let input: Vec<(u64, Vec<u64>)> = contents
+            .lines()
+            .map(|line| {
+                let mut parts = line.split(": ");
+                let result = parts.next().unwrap().parse().unwrap();
+                let values = parts.next().unwrap().split(" ").map(|x| x.parse().unwrap()).collect();
+                (result, values)
+            })
+            .collect();
+
+        input.iter().for_each(|(result, values)| {
+            if do_values_match_result(*result, values) {
+                matches += *result;
+            }
+        });
+        matches
+    }
+
+    fn part2(contents: &str) -> u64 {
+        let mut matches = 0;
+        let input: Vec<(u64, Vec<u64>)> = contents
         .lines()
         .map(|line| {
             let mut parts = line.split(": ");
@@ -10,32 +35,13 @@ pub fn part1(contents: &str) -> u64 {
         })
         .collect();
 
-    input.iter().for_each(|(result, values)| {
-        if do_values_match_result(*result, values) {
-            matches += *result;
-        }
-    });
-    matches
-}
-
-pub fn part2(contents: &str) -> u64 {
-    let mut matches = 0;
-    let input: Vec<(u64, Vec<u64>)> = contents
-    .lines()
-    .map(|line| {
-        let mut parts = line.split(": ");
-        let result = parts.next().unwrap().parse().unwrap();
-        let values = parts.next().unwrap().split(" ").map(|x| x.parse().unwrap()).collect();
-        (result, values)
-    })
-    .collect();
-
-    input.iter().for_each(|(result, values)| {
-        if do_values_match_result_with_or(*result, values, 1, values[0]) {
-            matches += *result;
-        }
-    });
-    matches
+        input.iter().for_each(|(result, values)| {
+            if do_values_match_result_with_or(*result, values, 1, values[0]) {
+                matches += *result;
+            }
+        });
+        matches
+    }
 }
 
 fn do_values_match_result(result: u64, values: &Vec<u64>) -> bool {
@@ -96,7 +102,7 @@ mod tests {
 
     #[test]
     fn test_part1() {
-      assert_eq!(part1("190: 10 19
+      assert_eq!(Day07::part1("190: 10 19
 3267: 81 40 27
 83: 17 5
 156: 15 6
@@ -109,7 +115,7 @@ mod tests {
 
     #[test]
     fn test_part2() {
-      assert_eq!(part2("190: 10 19
+      assert_eq!(Day07::part2("190: 10 19
 3267: 81 40 27
 83: 17 5
 156: 15 6

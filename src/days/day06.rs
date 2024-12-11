@@ -1,3 +1,4 @@
+use crate::days::Day;
 use std::collections::{HashMap, HashSet};
 
 use grid::Grid;
@@ -5,35 +6,38 @@ use grid::Grid;
 static OBSTACLE: char = '#';
 static ROBOT: char = '^';
 
-pub fn part1(contents: &str) -> u32 {
-    let grid = populate_grid(contents);
-    let start_index = find_start(&grid).unwrap();
-    let start_direction = Direction::Up;
-    let mut visited: HashMap<(usize, usize), HashSet<Direction>> = HashMap::new();
-    let spaces_visited = solve_grid(&grid, &mut visited, start_index, start_direction);
-    spaces_visited as u32
-}
+pub struct Day06;
 
-pub fn part2(contents: &str) -> u32 {
-    let grid = populate_grid(contents);
-    let start_index = find_start(&grid).unwrap();
-    let start_direction = Direction::Up;
-    let mut visited: HashMap<(usize, usize), HashSet<Direction>> = HashMap::new();
-    solve_grid(&grid, &mut visited, start_index, start_direction);
-    
-    let mut obstacles_added: u32 = 0;
-    for (index, _) in visited.iter() {
-        let mut new_grid = grid.clone();
-        new_grid[*index] = OBSTACLE;
-        let mut new_visited: HashMap<(usize, usize), HashSet<Direction>> = HashMap::new();
-        if solve_grid(&new_grid, &mut new_visited, start_index, start_direction) == -1 {
-            obstacles_added += 1;
-        }
+impl Day for Day06 {
+    fn part1(contents: &str) -> u64 {
+        let grid = populate_grid(contents);
+        let start_index = find_start(&grid).unwrap();
+        let start_direction = Direction::Up;
+        let mut visited: HashMap<(usize, usize), HashSet<Direction>> = HashMap::new();
+        let spaces_visited = solve_grid(&grid, &mut visited, start_index, start_direction);
+        spaces_visited as u64
     }
 
-    obstacles_added
-}
+    fn part2(contents: &str) -> u64 {
+        let grid = populate_grid(contents);
+        let start_index = find_start(&grid).unwrap();
+        let start_direction = Direction::Up;
+        let mut visited: HashMap<(usize, usize), HashSet<Direction>> = HashMap::new();
+        solve_grid(&grid, &mut visited, start_index, start_direction);
+        
+        let mut obstacles_added: u64 = 0;
+        for (index, _) in visited.iter() {
+            let mut new_grid = grid.clone();
+            new_grid[*index] = OBSTACLE;
+            let mut new_visited: HashMap<(usize, usize), HashSet<Direction>> = HashMap::new();
+            if solve_grid(&new_grid, &mut new_visited, start_index, start_direction) == -1 {
+                obstacles_added += 1;
+            }
+        }
 
+        obstacles_added
+    }
+}
 fn populate_grid(contents: &str) -> Grid<char> {
     let rows: Vec<Vec<char>> = contents
         .lines()
@@ -148,7 +152,7 @@ mod tests {
 ........#.
 #.........
 ......#...";
-        assert_eq!(part1(contents), 41);
+        assert_eq!(Day06::part1(contents), 41);
     }
 
     #[test]
@@ -163,6 +167,6 @@ mod tests {
 ........#.
 #.........
 ......#...";
-        assert_eq!(part2(contents), 6);
+        assert_eq!(Day06::part2(contents), 6);
     }
 }
