@@ -45,6 +45,7 @@ fn main() {
         "12" => run_day(&contents, day12::Day12::part1, day12::Day12::part2),
         "13" => run_day(&contents, day13::Day13::part1, day13::Day13::part2),
         "14" => run_day(&contents, day14::Day14::part1, day14::Day14::part2),
+        "15" => run_day(&contents, day15::Day15::part1, day15::Day15::part2),
         // Add more matches here
         _ => eprintln!("Unknown day: {}", args[1]),
     }
